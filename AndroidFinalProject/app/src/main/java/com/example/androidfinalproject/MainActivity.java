@@ -1,18 +1,119 @@
 package com.example.androidfinalproject;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.Iterator;
+
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+    Button addButton;
+    ImageButton searchButton;
+    ListView productList;
+
+    //Database implementation
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myProductsRef = database.getReference("Products");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        System.out.println("This is Narindra's line");
+        //Hiding default header
+        getSupportActionBar().hide();
+
+        //loading products from online database
+        loadProducts();
     }
 
+    //Starts when the user clicks the search icon
+    public void startSearchActivity(View v){
+        Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
+        startActivity(searchIntent);
 
+    }
+
+    public void addProduct(View v){
+        Intent addProductIntent = new Intent(MainActivity.this, AddActivity.class);
+        startActivity(addProductIntent);
+    }
+
+    public void loadProducts(){
+        productList = (ListView) findViewById(R.id.main_list);
+
+        //Query to database
+        Query queryProducts = myProductsRef.orderByKey();
+
+        ValueEventListener queryProductsListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Product> toDisplayList = new ArrayList<>();
+                Iterable<DataSnapshot> snapshotIterable = snapshot.getChildren();
+                Iterator<DataSnapshot> iterator = snapshotIterable.iterator();
+
+                while(iterator.hasNext()){
+                    DataSnapshot next = (DataSnapshot) iterator.next();
+                    String name = next.child("name").getValue().toString();
+                    String description = next.child("description").getValue().toString();
+                    String id = next.child("id").getValue().toString();
+                    String category = next.child("category").getValue().toString();
+                    String imageDataEncoded = next.child("imageDataEncoded").getValue().toString();
+
+                    Product currentProduct = new Product(name, description, id, category, imageDataEncoded);
+
+                    toDisplayList.add(currentProduct);
+                }
+                CustomAdapter currentAdapter = new CustomAdapter(MainActivity.this, 0, toDisplayList);
+                productList.setAdapter(currentAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(MainActivity.this, "No data available", Toast.LENGTH_LONG).show();
+
+            }
+        };
+
+        queryProducts.addValueEventListener(queryProductsListener);
+        productList.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Product currentProduct = (Product) parent.getItemAtPosition(position);
+        String nameC = currentProduct.getName();
+        String idC = currentProduct.getId();
+        String categoryC = currentProduct.getCategory();
+        String descriptionC = currentProduct.getDescription();
+        String imageDataEncodedC = currentProduct.getImageDataEncoded();
+
+        //Creating the intent and passing the hash map through it to show activity
+        Intent showIntent = new Intent(this, ShowProductActivity.class);
+        showIntent.putExtra("name", nameC);
+        showIntent.putExtra("category", categoryC);
+        showIntent.putExtra("description", descriptionC);
+        showIntent.putExtra("id", idC);
+
+        //byte[] encodeByte = Base64.decode(imageDataEncodedC, Base64.DEFAULT);
+        //showIntent.putExtra("imageData", encodeByte);
+        startActivity(showIntent);
+    }
 }

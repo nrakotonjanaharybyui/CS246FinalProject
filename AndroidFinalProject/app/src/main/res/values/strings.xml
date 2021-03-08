@@ -3,4 +3,19 @@
     <string name="kasuwa_logo">Kasuwa logo</string>
     <string name="publish_your_add">add</string>
     <string name="search_button">search button</string>
+    <string name="keyword">Keyword</string>
+    <string name="search">Search</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
+    <string name="upload_an_image">Upload an image</string>
+    <string name="add_an_image_button_browse_device">Add an image button (browse device)</string>
+    <string name="save">Save</string>
+    <string name="product_image">product image</string>
+    <string name="add_to_cart">Add to Cart</string>
+
+    <string-array name="category">
+        <item>Choose a category</item>
+        <item>Services</item>
+        <item>Products</item>
+    </string-array>
 </resources>
