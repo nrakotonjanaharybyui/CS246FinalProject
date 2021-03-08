@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                     Product currentProduct = new Product(name, description, id, category, imageDataEncoded);
 
-                    toDisplayList.add(currentProduct);
+                    toDisplayList.add(0, currentProduct);
                 }
                 CustomAdapter currentAdapter = new CustomAdapter(MainActivity.this, 0, toDisplayList);
                 productList.setAdapter(currentAdapter);
