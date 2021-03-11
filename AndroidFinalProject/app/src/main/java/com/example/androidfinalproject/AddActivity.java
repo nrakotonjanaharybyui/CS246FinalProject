@@ -2,6 +2,7 @@ package com.example.androidfinalproject;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,9 +22,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -58,6 +61,25 @@ public class AddActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item);
         addCategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         addCategory.setAdapter(addCategoryAdapter);
+
+        //Creating defaultImage
+        FirebaseDatabase imageDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference myImageRef = imageDatabase.getReference("DefaultImage");
+        myImageRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String myImageString = snapshot.getValue().toString();
+                byte[] encodeByte = Base64.decode(myImageString, Base64.DEFAULT);
+                currentProduct.setImageDataEncoded(myImageString); //Setting the Product image to the default Image
+                Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+                productImage.setImageBitmap(bitmap);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
     }
 
@@ -104,9 +126,13 @@ public class AddActivity extends AppCompatActivity {
     public void saveProduct(View v){
         //Connection to server
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myProducts = database.getReference("Products");
+        DatabaseReference myProducts = database.getReference("Products"); //Product DataBase reference
         DatabaseReference newChildRef = myProducts.push();
         String key = newChildRef.getKey();
+
+        DatabaseReference myProductsIndex = database.getReference("SearchIndex"); //Product Search Index Database reference
+        DatabaseReference newIndexChildRef = myProductsIndex.push();
+        String indexKey = newIndexChildRef.getKey();
 
         //Creating Current Product information @Product_Creation
         currentProduct.setName(nameInput.getText().toString());
@@ -119,7 +145,7 @@ public class AddActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Snackbar.make(findViewById(android.R.id.content), "Product Uploaded", Snackbar.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Product uploaded", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(AddActivity.this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -131,6 +157,11 @@ public class AddActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Failed to upload Product", Toast.LENGTH_LONG).show();
             }
         });
+
+        //Sending Current Product Search Info
+        myProductsIndex.child(indexKey).child("id").setValue(currentProduct.getId());
+        myProductsIndex.child(indexKey).child("name").setValue(currentProduct.getName());
+        myProductsIndex.child(indexKey).child("category").setValue(currentProduct.getCategory());
 
 
     }
