@@ -49,15 +49,6 @@ public class CustomAdapter extends ArrayAdapter<Product> {
         itemImage.setImageBitmap(bitmap);
         itemCategory.setText(product.getCategory());
 
-        String categoryString = product.getCategory();
-
-        /*if (categoryString.equals("Choose a category")){
-            itemCategory.setText("Not categorized");
-        }
-        else{
-            itemCategory.setText(product.getCategory());
-        }*/
-
 
         //return super.getView(position, convertView, parent);
         return convertView;

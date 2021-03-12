@@ -130,9 +130,10 @@ public class AddActivity extends AppCompatActivity {
         DatabaseReference newChildRef = myProducts.push();
         String key = newChildRef.getKey();
 
-        DatabaseReference myProductsIndex = database.getReference("SearchIndex"); //Product Search Index Database reference
-        DatabaseReference newIndexChildRef = myProductsIndex.push();
-        String indexKey = newIndexChildRef.getKey();
+        /*Product Search Index Database reference*/
+        //DatabaseReference myProductsIndex = database.getReference("SearchIndex");
+        //DatabaseReference newIndexChildRef = myProductsIndex.push();
+        //String indexKey = newIndexChildRef.getKey();
 
         //Creating Current Product information @Product_Creation
         currentProduct.setName(nameInput.getText().toString());
@@ -158,10 +159,11 @@ public class AddActivity extends AppCompatActivity {
             }
         });
 
-        //Sending Current Product Search Info
-        myProductsIndex.child(indexKey).child("id").setValue(currentProduct.getId());
-        myProductsIndex.child(indexKey).child("name").setValue(currentProduct.getName());
-        myProductsIndex.child(indexKey).child("category").setValue(currentProduct.getCategory());
+        /*Sending Current Product Search Info*/
+        //myProductsIndex.child(indexKey).child("id").setValue(currentProduct.getId());
+        //myProductsIndex.child(indexKey).child("name").setValue(currentProduct.getName());
+        //myProductsIndex.child(indexKey).child("category").setValue(currentProduct.getCategory());
+        //myProductsIndex.child(indexKey).child("description").setValue(currentProduct.getDescription());
 
 
     }

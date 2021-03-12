@@ -48,22 +48,26 @@ public class ShowProductActivity extends AppCompatActivity {
 
         Intent showIntent = getIntent();
 
-        //Populating the views
-        String name = showIntent.getStringExtra("name");
-        String category = showIntent.getStringExtra("category");
-        String description = showIntent.getStringExtra("description");
+        //yielding id
         String id = showIntent.getStringExtra("id");
 
-        //Server request for image
+        //Server request for object
         Query queryProducts = myProductsRef.orderByKey();
-        DatabaseReference itemRef = myProductsRef.child(id).child("imageDataEncoded");
+        DatabaseReference itemRef = myProductsRef.child(id);
         itemRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String imageData = snapshot.getValue().toString();
+                String name = snapshot.child("name").getValue().toString();
+                String category = snapshot.child("category").getValue().toString();
+                String description = snapshot.child("description").getValue().toString();
+                String imageData = snapshot.child("imageDataEncoded").getValue().toString();
                 byte[] encodeByte = Base64.decode(imageData, Base64.DEFAULT);
                 Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+
                 mainImage.setImageBitmap(bitmap);
+                productName.setText(name);
+                productCategory.setText(category);
+                productDescription.setText(description);
             }
 
             @Override
@@ -73,9 +77,7 @@ public class ShowProductActivity extends AppCompatActivity {
         });
 
 
-        productName.setText(name);
-        productCategory.setText(category);
-        productDescription.setText(description);
+
 
     }
 }

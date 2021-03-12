@@ -1,7 +1,5 @@
 package com.example.androidfinalproject;
 
-import android.os.Parcelable;
-
 import java.io.Serializable;
 
 public class Product implements Serializable {
