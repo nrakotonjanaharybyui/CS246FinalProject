@@ -7,6 +7,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,6 +32,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //Database implementation
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myProductsRef = database.getReference("Products");
+
+    View loaderBackground;
+    ProgressBar loaderIcon;
+    TextView loaderHeading, loaderText;
 
 
     @Override
@@ -81,8 +87,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                     toDisplayList.add(0, currentProduct);
                 }
+
                 CustomAdapter currentAdapter = new CustomAdapter(MainActivity.this, 0, toDisplayList);
                 productList.setAdapter(currentAdapter);
+
+                hideLoaderScreen();
             }
 
             @Override
@@ -115,5 +124,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //byte[] encodeByte = Base64.decode(imageDataEncodedC, Base64.DEFAULT);
         //showIntent.putExtra("imageData", encodeByte);
         startActivity(showIntent);
+    }
+
+    public void hideLoaderScreen(){
+        loaderBackground = (View) findViewById(R.id.progressBackground);
+        loaderIcon = (ProgressBar) findViewById(R.id.progressIcon);
+        loaderHeading = (TextView) findViewById(R.id.progressHeading);
+        loaderText = (TextView) findViewById(R.id.progressText);
+        addButton = (Button) findViewById(R.id.button);
+
+        loaderBackground.setVisibility(View.GONE);
+        loaderIcon.setVisibility(View.GONE);
+        loaderText.setVisibility(View.GONE);
+        loaderHeading.setVisibility(View.GONE);
+
+        addButton.setVisibility(View.VISIBLE);
+
     }
 }
