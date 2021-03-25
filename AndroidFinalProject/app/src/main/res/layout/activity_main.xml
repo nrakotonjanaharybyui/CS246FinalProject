@@ -18,6 +18,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/kasuwa_logo" />
 
+    <ImageView
+        android:id="@+id/cartImageView"
+        android:layout_width="124dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="View cart"
+        android:onClick="startCartActivity"
+        app:layout_constraintStart_toEndOf="@id/imageView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/cart" />
+
     <Button
         android:id="@+id/button"
         android:layout_width="68dp"
@@ -47,6 +59,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_action_name" />
+
 
     <ListView
         android:id="@+id/main_list"

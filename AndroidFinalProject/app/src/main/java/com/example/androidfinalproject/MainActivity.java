@@ -1,10 +1,13 @@
 package com.example.androidfinalproject;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -139,6 +142,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         loaderHeading.setVisibility(View.GONE);
 
         addButton.setVisibility(View.VISIBLE);
+
+    }
+    public void startCartActivity(View v){
+        Intent cartIntent = new Intent(MainActivity.this, CartActivity.class);
+        startActivity(cartIntent);
 
     }
 }

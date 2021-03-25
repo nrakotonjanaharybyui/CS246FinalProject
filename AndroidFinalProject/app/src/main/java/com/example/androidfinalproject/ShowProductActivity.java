@@ -1,13 +1,17 @@
 package com.example.androidfinalproject;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,6 +49,12 @@ public class ShowProductActivity extends AppCompatActivity {
         productCategory = (TextView) findViewById(R.id.show_product_category);
         productDescription = (TextView) findViewById(R.id.show_product_description);
         addCartButton = (Button) findViewById(R.id.show_product_add_to_cart_button);
+//        addCartButton.setOnClickListener();
+        addCartButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                saveData();
+            }
+        });
 
         Intent showIntent = getIntent();
 
@@ -79,5 +89,23 @@ public class ShowProductActivity extends AppCompatActivity {
 
 
 
+    }
+    public void saveData() {
+
+        Intent intent = getIntent();
+
+        String name = getIntent().getStringExtra("name");
+        String category = getIntent().getStringExtra("category");
+        String description = getIntent().getStringExtra("description");
+
+        SharedPreferences sharedPref = this.getSharedPreferences("product", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(name, intent.getStringExtra(name));
+        editor.putString(category, intent.getStringExtra(category));
+        editor.putString(description, intent.getStringExtra(description));
+        editor.commit();
+
+        Toast toast = Toast.makeText(getApplicationContext(), "Item added to cart", Toast.LENGTH_SHORT);
+        toast.show();
     }
 }

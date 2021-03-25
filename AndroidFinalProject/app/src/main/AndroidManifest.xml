@@ -9,10 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidFinalProject">
+        <activity android:name=".CartActivity"></activity>
         <activity
             android:name=".RegisterActivity"
-            android:parentActivityName=".WelcomeActivity"
-            ></activity>
+            android:parentActivityName=".WelcomeActivity" />
         <activity android:name=".MainActivity" />
         <activity
             android:name=".ShowProductActivity"
