@@ -18,6 +18,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+/**
+ * Welcome Activity
+ * This is the welcome class which is the first UI displayed to the user
+ * Here is where the user enters his/her credentials or create a new account
+ */
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener{
     private TextView registerLink;
     private EditText emailField, passwordField;
@@ -26,6 +31,11 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
     private FirebaseAuth mAuth;
 
+    /**
+     * onCreate
+     * Triggered when the page loads itself
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +60,12 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    //On click listener function
+    /**
+     * onClick
+     * Main Onclick listner
+     * Listen to clicks and switches throuhg ids to launch functions
+     * @param v (View)
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -63,6 +78,10 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    /**
+     * logUser
+     * Handles fields' info and logs user
+     */
     private void logUser() {
         String email = emailField.getText().toString().trim();
         String password = passwordField.getText().toString().trim();
