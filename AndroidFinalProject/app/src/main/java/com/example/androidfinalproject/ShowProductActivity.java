@@ -1,17 +1,26 @@
 package com.example.androidfinalproject;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +34,12 @@ public class ShowProductActivity extends AppCompatActivity {
     TextView productCategory;
     TextView productDescription;
     Button addCartButton;
+    Spinner addCategory;
+    private static final int PICK_IMAGE = 1;
+    Uri imageUri;
+    Cart currentItem = new Cart();
+    EditText nameInput;
+    EditText descInput;
 
 
     @Override
@@ -45,6 +60,12 @@ public class ShowProductActivity extends AppCompatActivity {
         productCategory = (TextView) findViewById(R.id.show_product_category);
         productDescription = (TextView) findViewById(R.id.show_product_description);
         addCartButton = (Button) findViewById(R.id.show_product_add_to_cart_button);
+//        addCartButton.setOnClickListener();
+//        addCartButton.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                saveData();
+//            }
+//        });
 
         Intent showIntent = getIntent();
 
@@ -79,5 +100,59 @@ public class ShowProductActivity extends AppCompatActivity {
 
 
 
+    }
+    public void saveCart(View v){
+        //Connection to server
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myProducts = database.getReference("Cart"); //Cart DataBase reference
+        DatabaseReference newChildRef = myProducts.push();
+        String key = newChildRef.getKey();
+        mainImage = (ImageView) findViewById(R.id.show_product_image);
+        productCategory = (TextView) findViewById(R.id.show_product_category);
+
+        //Creating Current Product information @Product_Creation
+        currentItem.setName(productName.getText().toString());
+        currentItem.setDescription(productDescription.getText().toString());
+        currentItem.setCategory(productCategory.getText().toString());
+        currentItem.setId(key);
+
+        //Sending Current Product to server
+        myProducts.child(key).setValue(currentItem)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getApplicationContext(), "Added to Cart", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(ShowProductActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "Failed to add to cart", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+    }
+
+    public void saveData() {
+
+        Intent intent = getIntent();
+
+        String name = getIntent().getStringExtra("name");
+        String category = getIntent().getStringExtra("category");
+        String description = getIntent().getStringExtra("description");
+
+        SharedPreferences sharedPref = this.getSharedPreferences("product", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(name, intent.getStringExtra(name));
+        editor.putString(category, intent.getStringExtra(category));
+        editor.putString(description, intent.getStringExtra(description));
+        editor.commit();
+
+        Toast toast = Toast.makeText(getApplicationContext(), "Item added to cart", Toast.LENGTH_SHORT);
+        toast.show();
     }
 }
