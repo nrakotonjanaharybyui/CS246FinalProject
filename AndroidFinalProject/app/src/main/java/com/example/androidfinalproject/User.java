@@ -1,5 +1,12 @@
 package com.example.androidfinalproject;
 
+/**
+ * User class
+ * @author Narindra Rakotonjanahary
+ * @version 03/16/2021
+ * Handles all informations about the User class
+ * provides getters and setters
+ */
 public class User {
     private String fullName, address, email;
 

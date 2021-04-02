@@ -27,6 +27,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+
+/**
+ * MainActivity
+ * App main screen
+ * Displays new feeds from database
+ * Allows user to add a new item, search items
+ */
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     Button addButton;
     ImageButton searchButton;
@@ -60,11 +67,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    /**
+     * addProduct
+     * Starts the AddActivity class where new items are created and sent to database
+     * @param v
+     */
     public void addProduct(View v){
         Intent addProductIntent = new Intent(MainActivity.this, AddActivity.class);
         startActivity(addProductIntent);
     }
 
+
+    /**
+     * loadProducts
+     * Loads the items previously created and saved on the database
+     */
     public void loadProducts(){
         productList = (ListView) findViewById(R.id.main_list);
 
@@ -108,6 +125,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         productList.setOnItemClickListener(this);
     }
 
+    /**
+     * onItemClick
+     * Triggered when the user clicks an item from the ListView
+     * Starts a new intent (ShowProductActivity) that displays the details of the item
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Product currentProduct = (Product) parent.getItemAtPosition(position);
@@ -124,11 +150,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         showIntent.putExtra("description", descriptionC);
         showIntent.putExtra("id", idC);
 
-        //byte[] encodeByte = Base64.decode(imageDataEncodedC, Base64.DEFAULT);
-        //showIntent.putExtra("imageData", encodeByte);
         startActivity(showIntent);
     }
 
+    /**
+     * hideLoaderScreen
+     * Hides the loader elements when all items from database are ready to display
+     * on the ListView
+     */
     public void hideLoaderScreen(){
         loaderBackground = (View) findViewById(R.id.progressBackground);
         loaderIcon = (ProgressBar) findViewById(R.id.progressIcon);

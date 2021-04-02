@@ -18,12 +18,23 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+
+/**
+ * RegisterActivity
+ * Handles new user creation
+ * @version 03/15/2021
+ */
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
     private FirebaseAuth mAuth;
     private EditText fullNameField, addressField, emailField, passwordField;
     private Button registerButton;
     private ProgressBar registerProgress;
 
+    /**
+     * onCreate
+     * Triggered when page loads
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +55,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         registerButton.setOnClickListener(this);
     }
 
+    /**
+     * onClick
+     * Click listener
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch(v.getId()){
@@ -53,6 +69,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+
+    /**
+     * registerUser
+     * Handles new user registration
+     * Checks if fields are filled correctly
+     * Yields data from textfields, create an user and sends it to database
+     */
     private void registerUser() {
         String fullName = fullNameField.getText().toString().trim();
         String address = addressField.getText().toString().trim();
