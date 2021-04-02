@@ -107,10 +107,11 @@ public class ShowProductActivity extends AppCompatActivity {
         DatabaseReference myProducts = database.getReference("Cart"); //Cart DataBase reference
         DatabaseReference newChildRef = myProducts.push();
         String key = newChildRef.getKey();
-        mainImage = (ImageView) findViewById(R.id.show_product_image);
+//        mainImage = (ImageView) findViewById(R.id.show_product_image);
         productCategory = (TextView) findViewById(R.id.show_product_category);
 
         //Creating Current Product information @Product_Creation
+//        currentItem.setImageDataEncoded(mainImage.toString());
         currentItem.setName(productName.getText().toString());
         currentItem.setDescription(productDescription.getText().toString());
         currentItem.setCategory(productCategory.getText().toString());
