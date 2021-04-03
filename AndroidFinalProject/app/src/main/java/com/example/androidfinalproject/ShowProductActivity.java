@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,7 +28,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 public class ShowProductActivity extends AppCompatActivity {
     ImageView mainImage;
@@ -40,6 +47,9 @@ public class ShowProductActivity extends AppCompatActivity {
     Cart currentItem = new Cart();
     EditText nameInput;
     EditText descInput;
+
+
+
 
 
     @Override
@@ -101,16 +111,33 @@ public class ShowProductActivity extends AppCompatActivity {
 
 
     }
+
+
     public void saveCart(View v){
         //Connection to server
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myProducts = database.getReference("Cart"); //Cart DataBase reference
         DatabaseReference newChildRef = myProducts.push();
         String key = newChildRef.getKey();
-        mainImage = (ImageView) findViewById(R.id.show_product_image);
+
+
+        // Get the data from an ImageView as bytes
+        mainImage.setDrawingCacheEnabled(true);
+        mainImage.buildDrawingCache();
+        Bitmap bitmap = ((BitmapDrawable) mainImage.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+        String imageDataEncoded = Base64.encodeToString(data, Base64.DEFAULT);
+        currentItem.setImageDataEncoded(imageDataEncoded);
+
+
+
+//        mainImage = (ImageView) findViewById(R.id.show_product_image);
         productCategory = (TextView) findViewById(R.id.show_product_category);
 
         //Creating Current Product information @Product_Creation
+//        currentItem.setImageDataEncoded(mainImage.toString());
         currentItem.setName(productName.getText().toString());
         currentItem.setDescription(productDescription.getText().toString());
         currentItem.setCategory(productCategory.getText().toString());
@@ -137,22 +164,4 @@ public class ShowProductActivity extends AppCompatActivity {
 
     }
 
-    public void saveData() {
-
-        Intent intent = getIntent();
-
-        String name = getIntent().getStringExtra("name");
-        String category = getIntent().getStringExtra("category");
-        String description = getIntent().getStringExtra("description");
-
-        SharedPreferences sharedPref = this.getSharedPreferences("product", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(name, intent.getStringExtra(name));
-        editor.putString(category, intent.getStringExtra(category));
-        editor.putString(description, intent.getStringExtra(description));
-        editor.commit();
-
-        Toast toast = Toast.makeText(getApplicationContext(), "Item added to cart", Toast.LENGTH_SHORT);
-        toast.show();
-    }
 }

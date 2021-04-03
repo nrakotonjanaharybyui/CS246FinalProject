@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
     public void startCartActivity(View v){
-        Intent cartIntent = new Intent(MainActivity.this, SaveCartActivity.class);
+        Intent cartIntent = new Intent(MainActivity.this, RetrieveCartActivity.class);
         startActivity(cartIntent);
 
     }
