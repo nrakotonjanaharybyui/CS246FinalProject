@@ -38,13 +38,13 @@ public class ListAdaptor extends ArrayAdapter {
 
         Cart cart = cartList.get(position);
 
-        //Decoding product image
-//        String imageDataEncoded = cart.getImageDataEncoded();
-//        if (imageDataEncoded!=""){
-//            byte[] encodeByte = Base64.decode(imageDataEncoded, Base64.DEFAULT);
-//            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-//            image.setImageBitmap(bitmap);
-//        }
+//        Decoding product image
+        String imageDataEncoded = cart.getImageDataEncoded();
+        if (imageDataEncoded!=""){
+            byte[] encodeByte = Base64.decode(imageDataEncoded, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            image.setImageBitmap(bitmap);
+        }
 
         name.setText(cart.getName());
         description.setText(cart.getDescription());
